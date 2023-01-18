@@ -10,7 +10,7 @@ public class ErrorMessageMapper {
         ErrorMessage errorMessage = new ErrorMessage();
         errorMessage.setStatusCode(customException.getStatusCode());
         errorMessage.setErrorMessage(customException.getErrorMessage());
-        errorMessage.setSubCode(customException.getSubcode());
+        errorMessage.setSubCode(customException.getSubCode());
         errorMessage.setDetails(customException.getDetails());
         return errorMessage;
     }

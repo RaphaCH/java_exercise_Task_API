@@ -13,7 +13,7 @@ public class CustomException extends Exception {
     
     private String statusCode;
     private String errorMessage;
-    private String subcode;
+    private String subCode;
     private String details;
 
 }

@@ -57,7 +57,7 @@ public class EmployeeController {
             List<Employee> response = employeeServices.getAllEmployees();
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (CustomException e) {
-            ErrorMessage errorMessage = new ErrorMessage(e.getStatusCode(), e.getErrorMessage(), e.getSubcode(),
+            ErrorMessage errorMessage = new ErrorMessage(e.getStatusCode(), e.getErrorMessage(), e.getSubCode(),
                     e.getDetails());
             HttpStatus httpStatus = HttpStatus.valueOf(Integer.parseInt(errorMessage.getStatusCode()));
             return new ResponseEntity<>(errorMessage, httpStatus);
@@ -76,7 +76,7 @@ public class EmployeeController {
             Employee response = employeeServices.getOneEmployee(id);
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (CustomException e) {
-            ErrorMessage errorMessage = new ErrorMessage(e.getStatusCode(), e.getErrorMessage(), e.getSubcode(),
+            ErrorMessage errorMessage = new ErrorMessage(e.getStatusCode(), e.getErrorMessage(), e.getSubCode(),
                     e.getDetails());
             HttpStatus httpStatus = HttpStatus.valueOf(Integer.parseInt(errorMessage.getStatusCode()));
             return new ResponseEntity<>(errorMessage, httpStatus);

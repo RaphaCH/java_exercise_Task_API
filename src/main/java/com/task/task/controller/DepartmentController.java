@@ -33,7 +33,7 @@ public class DepartmentController {
             List<Department> response = departmentServices.retrieveAllDepartments();
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (CustomException e) {
-            ErrorMessage errorMessage = new ErrorMessage(e.getStatusCode(), e.getErrorMessage(), e.getSubcode(),
+            ErrorMessage errorMessage = new ErrorMessage(e.getStatusCode(), e.getErrorMessage(), e.getSubCode(),
                     e.getDetails());
             HttpStatus httpStatus = HttpStatus.valueOf(Integer.parseInt(errorMessage.getStatusCode()));
             return new ResponseEntity<>(errorMessage, httpStatus);
@@ -46,7 +46,7 @@ public class DepartmentController {
             Department response = departmentServices.createNewDeparment(department);
             return new ResponseEntity<>(response, HttpStatus.CREATED);
         } catch (CustomException e) {
-            ErrorMessage errorMessage = new ErrorMessage(e.getStatusCode(), e.getErrorMessage(), e.getSubcode(),
+            ErrorMessage errorMessage = new ErrorMessage(e.getStatusCode(), e.getErrorMessage(), e.getSubCode(),
                     e.getDetails());
             HttpStatus httpStatus = HttpStatus.valueOf(Integer.parseInt(errorMessage.getStatusCode()));
             return new ResponseEntity<>(errorMessage, httpStatus);
