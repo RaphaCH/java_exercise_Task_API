@@ -27,7 +27,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:8080")
+@CrossOrigin(origins = "http://localhost:9090")
 @RequestMapping("/employees")
 public class EmployeeController {
 
@@ -71,38 +71,53 @@ public class EmployeeController {
                             @ApiResponse(responseCode = "200", description = "Response 200-ok whenever the provided id returns one found Employee from the Database.", useReturnTypeSchema = true, content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @io.swagger.v3.oas.annotations.media.Schema(implementation = Employee.class))),
                             @ApiResponse(responseCode = "404", description = "Response returned whenever the provided id does not find any Emoployee in the Database.")
                     })
-    public ResponseEntity<?> getOneEmployee(@PathVariable("id") long id) {
+    public ResponseEntity<?> getOneEmployee(@PathVariable("id") long id) throws CustomException {
+        Employee response = employeeServices.getOneEmployee(id);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @PostMapping()
+    @Operation(tags = { "Employee Api contoller" })
+    public ResponseEntity<?> createNewEmployee(@RequestBody @Valid Employee employee) {
         try {
-            Employee response = employeeServices.getOneEmployee(id);
-            return new ResponseEntity<>(response, HttpStatus.OK);
+            Employee response = employeeServices.createNewEmployee(employee);
+            return new ResponseEntity<>(response, HttpStatus.CREATED);
         } catch (CustomException e) {
             ErrorMessage errorMessage = new ErrorMessage(e.getStatusCode(), e.getErrorMessage(), e.getSubCode(),
                     e.getDetails());
             HttpStatus httpStatus = HttpStatus.valueOf(Integer.parseInt(errorMessage.getStatusCode()));
             return new ResponseEntity<>(errorMessage, httpStatus);
         }
-
-    }
-
-    @PostMapping()
-    @Operation(tags = { "Employee Api contoller" })
-    public ResponseEntity<?> createNewEmployee(@RequestBody @Valid Employee employee) {
-        Employee response = employeeServices.createNewEmployee(employee);
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{id}")
     @Operation(tags = { "Employee Api contoller" })
     public ResponseEntity<?> deleteOneEmployee(@PathVariable("id") long id) {
-        String response = employeeServices.deleteOneEmployee(id);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        try {
+            String response = employeeServices.deleteOneEmployee(id);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+
+        } catch (CustomException e) {
+            ErrorMessage errorMessage = new ErrorMessage(e.getStatusCode(), e.getErrorMessage(), e.getSubCode(),
+                    e.getDetails());
+            HttpStatus httpStatus = HttpStatus.valueOf(Integer.parseInt(errorMessage.getStatusCode()));
+            return new ResponseEntity<>(errorMessage, httpStatus);
+        }
     }
 
     @PutMapping("/{id}/{dptId}")
     @Operation(tags = { "Employee Api contoller" })
     public ResponseEntity<?> updateOneEmployee(@PathVariable("id") Long id,
             @PathVariable(required = false, name = "dptId") Long dptId, @RequestBody @Valid Employee employee) {
-        Employee response = employeeServices.updateOneEmployee(id, dptId, employee);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        try {
+            Employee response = employeeServices.updateOneEmployee(id, dptId, employee);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+
+        } catch (CustomException e) {
+            ErrorMessage errorMessage = new ErrorMessage(e.getStatusCode(), e.getErrorMessage(), e.getSubCode(),
+                    e.getDetails());
+            HttpStatus httpStatus = HttpStatus.valueOf(Integer.parseInt(errorMessage.getStatusCode()));
+            return new ResponseEntity<>(errorMessage, httpStatus);
+        }
     }
 }

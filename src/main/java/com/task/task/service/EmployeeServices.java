@@ -23,16 +23,18 @@ public class EmployeeServices {
   public List<Employee> getAllEmployees() throws CustomException {
     // RestTemplate restTemplate = new RestTemplate("localhost:8080");
     try {
-      // List<Employee> response = restTemplate.get("http://localhost:8080/employees", List.class).block();
+      // List<Employee> response = restTemplate.get("http://localhost:8080/employees",
+      // List.class).block();
       List<Employee> response = restTemplate.getAll("http://localhost:8080/employees", Employee.class).block();
       return response;
     } catch (RestClientResponseException e) {
       CustomException customException = e.getResponseBodyAs(CustomException.class);
-      log.error("Error inside catch statment {}", customException);
       if (customException != null) {
         throw customException;
+      } else {
+        log.error("Custom Exception is null, value of WebClientResponseException is {}", e);
+        return null;
       }
-      return null;
     }
   }
 
@@ -68,30 +70,64 @@ public class EmployeeServices {
       return response;
     } catch (WebClientResponseException e) {
       CustomException customException = e.getResponseBodyAs(CustomException.class);
-      log.error("Error inside catch statment {}", customException);
       if (customException != null) {
         throw customException;
+      } else {
+        log.error("Custom Exception is null, value of WebClientResponseException is {}", e);
+        return null;
       }
-      return null;
     }
   }
 
-  public Employee createNewEmployee(Employee employeeDto) {
-    HttpEntity<Employee> request = new HttpEntity<>(employeeDto);
-    Employee response = restTemplate.post("http://localhost:8080/employees", request, Employee.class).block();
-    return response;
+  public Employee createNewEmployee(Employee employeeDto) throws CustomException {
+    try {
+      HttpEntity<Employee> request = new HttpEntity<>(employeeDto);
+      Employee response = restTemplate.post("http://localhost:8080/employees", request, Employee.class).block();
+      return response;
+    } catch (WebClientResponseException e) {
+      CustomException customException = e.getResponseBodyAs(CustomException.class);
+      if (customException != null) {
+        throw customException;
+      } else {
+        log.error("Custom Exception is null, value of WebClientResponseException is {}", e);
+        return null;
+      }
+    }
+
   }
 
-  public String deleteOneEmployee(long id) {
-    String response = restTemplate.delete("http://localhost:8080/employees/" + id, String.class).block();
-    return response;
+  public String deleteOneEmployee(long id) throws CustomException {
+    try {
+      String response = restTemplate.delete("http://localhost:8080/employees/" + id, String.class).block();
+      return response;
+    } catch (WebClientResponseException e) {
+      CustomException customException = e.getResponseBodyAs(CustomException.class);
+      if (customException != null) {
+        throw customException;
+      } else {
+        log.error("Custom Exception is null, value of WebClientResponseException is {}", e);
+        return null;
+      }
+    }
+
   }
 
-  public Employee updateOneEmployee(Long id, Long dptId, Employee employeeDto) {
-    HttpEntity<Employee> request = new HttpEntity<>(employeeDto);
-    Employee response = restTemplate.put("http://localhost:8080/employees/" + id + "/" + dptId, request, Employee.class)
-        .block();
-    return response;
-  }
+  public Employee updateOneEmployee(Long id, Long dptId, Employee employeeDto) throws CustomException {
+    try {
+      HttpEntity<Employee> request = new HttpEntity<>(employeeDto);
+      Employee response = restTemplate
+          .put("http://localhost:8080/employees/" + id + "/" + dptId, request, Employee.class)
+          .block();
+      return response;
+    } catch (WebClientResponseException e) {
+      CustomException customException = e.getResponseBodyAs(CustomException.class);
+      if (customException != null) {
+        throw customException;
+      } else {
+        log.error("Custom Exception is null, value of WebClientResponseException is {}", e);
+        return null;
+      }
+    }
 
+  }
 }

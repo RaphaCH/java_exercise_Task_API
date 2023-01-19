@@ -28,11 +28,12 @@ public class DepartmentServices {
             return departments;
         } catch (WebClientResponseException e) {
             CustomException customException = e.getResponseBodyAs(CustomException.class);
-            log.error("Error inside catch statment {}", customException);
             if (customException != null) {
                 throw customException;
+            } else {
+                log.error("Custom Exception is null, value of WebClientResponseException is {}", e);
+                return null;
             }
-            return null;
         }
     }
 
@@ -43,11 +44,12 @@ public class DepartmentServices {
             return response;
         } catch (WebClientResponseException e) {
             CustomException customException = e.getResponseBodyAs(CustomException.class);
-            log.error("Error inside catch statment {}", customException);
             if (customException != null) {
                 throw customException;
+            } else {
+                log.error("Custom Exception is null, value of WebClientResponseException is {}", e);
+                return null;
             }
-            return null;
         }
     }
 
