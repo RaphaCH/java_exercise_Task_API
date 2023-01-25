@@ -1,9 +1,6 @@
 package com.task.task.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,10 +11,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.slf4j.Logger;
 
-import com.task.task.model.CustomException;
 import com.task.task.model.Employee;
-import com.task.task.model.ErrorMessage;
 import com.task.task.service.EmployeeServices;
 
 //import io.swagger.v3.oas.annotations.ExternalDocumentation;
@@ -34,10 +30,7 @@ public class EmployeeController {
     @Autowired
     private EmployeeServices employeeServices;
 
-    @GetMapping("/alive")
-    public String alive() {
-        return "I'm alive!";
-    }
+    private static final Logger log = org.slf4j.LoggerFactory.getLogger(EmployeeServices.class);
 
     @GetMapping()
     // The operation annotation is method specific.
@@ -53,15 +46,8 @@ public class EmployeeController {
     // externalDocs = @ExternalDocumentation(),
     )
     public ResponseEntity<?> getAllEmployees() {
-        try {
-            List<Employee> response = employeeServices.getAllEmployees();
-            return new ResponseEntity<>(response, HttpStatus.OK);
-        } catch (CustomException e) {
-            ErrorMessage errorMessage = new ErrorMessage(e.getStatusCode(), e.getErrorMessage(), e.getSubCode(),
-                    e.getDetails());
-            HttpStatus httpStatus = HttpStatus.valueOf(Integer.parseInt(errorMessage.getStatusCode()));
-            return new ResponseEntity<>(errorMessage, httpStatus);
-        }
+        ResponseEntity<?> response = employeeServices.getAllEmployees();
+        return response;
     }
 
     @GetMapping("/{id}")
@@ -71,53 +57,30 @@ public class EmployeeController {
                             @ApiResponse(responseCode = "200", description = "Response 200-ok whenever the provided id returns one found Employee from the Database.", useReturnTypeSchema = true, content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @io.swagger.v3.oas.annotations.media.Schema(implementation = Employee.class))),
                             @ApiResponse(responseCode = "404", description = "Response returned whenever the provided id does not find any Emoployee in the Database.")
                     })
-    public ResponseEntity<?> getOneEmployee(@PathVariable("id") long id) throws CustomException {
-        Employee response = employeeServices.getOneEmployee(id);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+    public ResponseEntity<?> getOneEmployee(@PathVariable("id") long id) {
+        ResponseEntity<?> response = employeeServices.getOneEmployee(id);
+        return response;
     }
 
     @PostMapping()
     @Operation(tags = { "Employee Api contoller" })
     public ResponseEntity<?> createNewEmployee(@RequestBody @Valid Employee employee) {
-        try {
-            Employee response = employeeServices.createNewEmployee(employee);
-            return new ResponseEntity<>(response, HttpStatus.CREATED);
-        } catch (CustomException e) {
-            ErrorMessage errorMessage = new ErrorMessage(e.getStatusCode(), e.getErrorMessage(), e.getSubCode(),
-                    e.getDetails());
-            HttpStatus httpStatus = HttpStatus.valueOf(Integer.parseInt(errorMessage.getStatusCode()));
-            return new ResponseEntity<>(errorMessage, httpStatus);
-        }
+        ResponseEntity<?> response = employeeServices.createNewEmployee(employee);
+        return response;
     }
 
     @DeleteMapping("/{id}")
     @Operation(tags = { "Employee Api contoller" })
     public ResponseEntity<?> deleteOneEmployee(@PathVariable("id") long id) {
-        try {
-            String response = employeeServices.deleteOneEmployee(id);
-            return new ResponseEntity<>(response, HttpStatus.OK);
-
-        } catch (CustomException e) {
-            ErrorMessage errorMessage = new ErrorMessage(e.getStatusCode(), e.getErrorMessage(), e.getSubCode(),
-                    e.getDetails());
-            HttpStatus httpStatus = HttpStatus.valueOf(Integer.parseInt(errorMessage.getStatusCode()));
-            return new ResponseEntity<>(errorMessage, httpStatus);
-        }
+        ResponseEntity<?> response = employeeServices.deleteOneEmployee(id);
+        return response;
     }
 
     @PutMapping("/{id}/{dptId}")
     @Operation(tags = { "Employee Api contoller" })
     public ResponseEntity<?> updateOneEmployee(@PathVariable("id") Long id,
             @PathVariable(required = false, name = "dptId") Long dptId, @RequestBody @Valid Employee employee) {
-        try {
-            Employee response = employeeServices.updateOneEmployee(id, dptId, employee);
-            return new ResponseEntity<>(response, HttpStatus.OK);
-
-        } catch (CustomException e) {
-            ErrorMessage errorMessage = new ErrorMessage(e.getStatusCode(), e.getErrorMessage(), e.getSubCode(),
-                    e.getDetails());
-            HttpStatus httpStatus = HttpStatus.valueOf(Integer.parseInt(errorMessage.getStatusCode()));
-            return new ResponseEntity<>(errorMessage, httpStatus);
-        }
+        ResponseEntity<?> response = employeeServices.updateOneEmployee(id, dptId, employee);
+        return response;
     }
 }

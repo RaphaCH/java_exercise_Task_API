@@ -2,10 +2,10 @@ package com.task.task.restTemplate;
 
 import java.util.List;
 
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import reactor.core.publisher.Mono;
@@ -23,57 +23,53 @@ public class RestTemplate {
                 .build();
     }
 
-    public <T> Mono<T> get(String url, Class<T> responseType) {
+    public <T> Mono<ResponseEntity<T>> getOne(String url, Class<T> responseType) {
         return webClient
                 .get()
                 .uri(url)
                 .retrieve()
-                .bodyToMono(responseType);
+                .onStatus(status -> status.is4xxClientError() || status.is5xxServerError(), clientResponse -> Mono.empty())
+                .toEntity(responseType);
     }
-
-    public <T> Mono<List<T>> getAll(String url, Class<T> responseType) {
+    
+    public <T> Mono<ResponseEntity<List<T>>> getAll(String url, Class<T> responseType) {
         return webClient
                 .get()
                 .uri(url)
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
-                .bodyToMono(new ParameterizedTypeReference<List<T>>() {
-                });
+                .toEntityList(responseType);
+                // .bodyToMono(new ParameterizedTypeReference<List<T>>() {
+                // });
     }
 
-    public <T> Mono<T> post(String url, HttpEntity<?> request, Class<T> responseType) {
+    public <T> Mono<ResponseEntity<T>> post(String url, HttpEntity<?> request, Class<T> responseType) {
         return webClient
                 .post()
                 .uri(url)
                 .bodyValue(request.getBody())
                 .retrieve()
-                .bodyToMono(responseType);
+                .toEntity(responseType);
+                // .bodyToMono(responseType);
     }
 
-    public <T> Mono<T> put(String url, HttpEntity<?> request, Class<T> responseType) {
+    public <T> Mono<ResponseEntity<T>> put(String url, HttpEntity<?> request, Class<T> responseType) {
         return webClient
                 .put()
                 .uri(url)
                 .bodyValue(request.getBody())
                 .retrieve()
-                .bodyToMono(responseType);
+                .toEntity(responseType);
+                // .bodyToMono(responseType);
     }
 
-    public <T> Mono<T> delete(String url, Class<T> responseType) {
+    public <T> Mono<ResponseEntity<T>> delete(String url, Class<T> responseType) {
         return webClient
                 .delete()
                 .uri(url)
                 .retrieve()
-                .bodyToMono(responseType);
+                .toEntity(responseType);
+                // .bodyToMono(responseType);
     }
 
-    // public <T> Mono<T> handleError(Mono<T> mono, Class<T> responseType) {
-    // return mono
-    // .onErrorResume(error -> {
-    // if (error instanceof WebClientResponseException) {
-    // return
-    // }
-    // return Mono.error(error);
-    // });
-    // }
 }
