@@ -23,6 +23,8 @@ public class RestTemplate {
                 .build();
     }
 
+    // So far only added .onStatus on this method to show it to you
+    // if ok, should be added to all methods
     public <T> Mono<ResponseEntity<T>> getOne(String url, Class<T> responseType) {
         return webClient
                 .get()

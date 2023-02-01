@@ -31,6 +31,10 @@ public class EmployeeControllerAdvice {
                 HttpStatus.BAD_REQUEST);
     }
 
+    // ---------------------------------------------------------
+    // Currently not used
+    // ---------------------------------------------------------
+    //
     // @ExceptionHandler(CustomException.class)
     // public ResponseEntity<ErrorMessage> handleCustomException(CustomException exception) {
     //     ErrorMessage errorMessage = ErrorMessageMapper.toErrorMessage(exception);
@@ -38,6 +42,13 @@ public class EmployeeControllerAdvice {
     //     return new ResponseEntity<ErrorMessage>(errorMessage, httpStatus);
     // }
 
+    // ---------------------------------------------------------
+    // We no longer need to handle WebClientResponseException because it is handled in 
+    //  inside src\main\java\com\task\task\restTemplate\RestTemplate.java
+    // check method getOne() line 33 .onStatus() makes webClient bypass WebClientResponseException
+    // and return empty mono, which means we get the treated ErrorMessage from Entity API
+    // ---------------------------------------------------------
+    // 
     // @ExceptionHandler(WebClientResponseException.class)
     // public ResponseEntity<?> handleWebClientResponseException(WebClientResponseException exception) {
     //     ErrorMessage errorMessage = exception.getResponseBodyAs(ErrorMessage.class);
