@@ -17,8 +17,8 @@ public class EmployeeServices {
   private static final Logger log = org.slf4j.LoggerFactory.getLogger(EmployeeServices.class);
 
   public ResponseEntity<?> getAllEmployees() {
-    ResponseEntity<?> response = restTemplate.getAll("http://localhost:8080/employees", Employee.class).block();
-    return response;
+    ResponseEntity<?> responseEntity = restTemplate.getAll("http://localhost:8080/employees", Employee.class).block();
+    return responseEntity;
   }
 
   public ResponseEntity<?> getOneEmployee(long id) {
@@ -30,21 +30,21 @@ public class EmployeeServices {
 
   public ResponseEntity<?> createNewEmployee(Employee employeeDto) {
     HttpEntity<Employee> request = new HttpEntity<>(employeeDto);
-    ResponseEntity<?> response = restTemplate.post("http://localhost:8080/employees", request, Employee.class).block();
-    return response;
+    ResponseEntity<?> responseEntity = restTemplate.post("http://localhost:8080/employees", request, Object.class).block();
+    return responseEntity;
   }
 
   public ResponseEntity<?> deleteOneEmployee(long id) {
-    ResponseEntity<?> response = restTemplate.delete("http://localhost:8080/employees/" + id, String.class).block();
-    return response;
+    ResponseEntity<?> responseEntity = restTemplate.delete("http://localhost:8080/employees/" + id, Object.class).block();
+    return responseEntity;
   }
 
   public ResponseEntity<?> updateOneEmployee(Long id, Long dptId, Employee employeeDto) {
       HttpEntity<Employee> request = new HttpEntity<>(employeeDto);
-      ResponseEntity<?> response = restTemplate
+      ResponseEntity<?> responseEntity = restTemplate
           .put("http://localhost:8080/employees/" + id + "/" + dptId, request, Employee.class)
           .block();
-      return response;
+      return responseEntity;
   }
   
 }

@@ -38,20 +38,20 @@ public class EmployeeControllerAdvice {
     //     return new ResponseEntity<ErrorMessage>(errorMessage, httpStatus);
     // }
 
-    @ExceptionHandler(WebClientResponseException.class)
-    public ResponseEntity<?> handleWebClientResponseException(WebClientResponseException exception) {
-        ErrorMessage errorMessage = exception.getResponseBodyAs(ErrorMessage.class);
-        if (errorMessage != null) {
-            HttpStatusCode httpStatus = exception.getStatusCode();
-            return new ResponseEntity<>(errorMessage, httpStatus);
-            // return errorMessage;
-        } else {
-            ErrorMessage fallBackErrorMessage = new ErrorMessage("500",
-                    "Original errorMessage returned null, further action required", "500",
-                    "Original errorMessage returned null, further action required");
-            return new ResponseEntity<ErrorMessage>(fallBackErrorMessage, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
+    // @ExceptionHandler(WebClientResponseException.class)
+    // public ResponseEntity<?> handleWebClientResponseException(WebClientResponseException exception) {
+    //     ErrorMessage errorMessage = exception.getResponseBodyAs(ErrorMessage.class);
+    //     if (errorMessage != null) {
+    //         HttpStatusCode httpStatus = exception.getStatusCode();
+    //         return new ResponseEntity<>(errorMessage, httpStatus);
+    //         // return errorMessage;
+    //     } else {
+    //         ErrorMessage fallBackErrorMessage = new ErrorMessage("500",
+    //                 "Original errorMessage returned null, further action required", "500",
+    //                 "Original errorMessage returned null, further action required");
+    //         return new ResponseEntity<ErrorMessage>(fallBackErrorMessage, HttpStatus.INTERNAL_SERVER_ERROR);
+    //     }
+    // }
 
     @ExceptionHandler(WebClientRequestException.class)
     public ResponseEntity<ErrorMessage> handleWebClientRequestException(WebClientRequestException exception) {
