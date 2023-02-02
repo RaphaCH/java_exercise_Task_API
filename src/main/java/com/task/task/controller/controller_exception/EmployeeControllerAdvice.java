@@ -1,34 +1,33 @@
 package com.task.task.controller.controller_exception;
 
+import com.task.task.model.ErrorConstant;
 import com.task.task.model.ErrorMessage;
-import com.task.task.model.Response;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.reactive.function.client.WebClientRequestException;
-import org.springframework.web.reactive.function.client.WebClientResponseException;
 import org.springframework.validation.FieldError;
 
 @ControllerAdvice
 public class EmployeeControllerAdvice {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Response> handleValidationExceptions(MethodArgumentNotValidException exception) {
+    public ResponseEntity<?> handleValidationExceptions(MethodArgumentNotValidException exception) {
         Map<String, String> errors = new HashMap<>();
         exception.getBindingResult().getAllErrors().forEach((error) -> {
             String fieldName = ((FieldError) error).getField();
             String errorMessage = error.getDefaultMessage();
             errors.put(fieldName, errorMessage);
         });
-        return new ResponseEntity<Response>(new Response(false, "400 - Bad Request", HttpStatus.BAD_REQUEST, errors),
-                HttpStatus.BAD_REQUEST);
+        // ErrorMessage for the moment - by design - only accepts strings, is this how we would use the enums with it?
+        ErrorMessage message = new ErrorMessage(HttpStatus.BAD_REQUEST.toString(), ErrorConstant.TEC001.key, ErrorConstant.TEC001.value, "some details should go here too", errors);
+        return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
     }
 
     // ---------------------------------------------------------
