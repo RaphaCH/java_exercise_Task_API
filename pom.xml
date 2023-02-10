@@ -83,6 +83,12 @@
     		<scope>test</scope>
 		</dependency>
 
+		<!-- Dependency for AOP - Aspect -->
+		<dependency>  
+			<groupId>org.springframework.boot</groupId>  
+			<artifactId>spring-boot-starter-aop</artifactId>  
+		</dependency> 
+
 		<dependency> 
   			<groupId>org.slf4j</groupId>
   			<artifactId>slf4j-api</artifactId>
