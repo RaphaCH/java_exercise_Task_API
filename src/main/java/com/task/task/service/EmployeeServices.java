@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.util.UriComponentsBuilder;
+
 import com.task.task.model.Employee;
 import com.task.task.restTemplate.RestTemplate;
 
@@ -24,27 +26,30 @@ public class EmployeeServices {
   public ResponseEntity<?> getOneEmployee(long id) {
     ResponseEntity<?> responseEntity = restTemplate.getOne("http://localhost:8080/employees/" + id, Object.class)
         .block();
-    log.info("Contents of responseEntity are {}", responseEntity);
     return responseEntity;
   }
 
-  public ResponseEntity<?> createNewEmployee(Employee employeeDto) {
+  public ResponseEntity<?> createNewEmployee(Employee employeeDto, long dptId) {
     HttpEntity<Employee> request = new HttpEntity<>(employeeDto);
-    ResponseEntity<?> responseEntity = restTemplate.post("http://localhost:8080/employees", request, Object.class).block();
+    UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl("http://localhost:8080/employees")
+        .queryParam("deptId", dptId);
+    String builderToString = uriBuilder.toUriString();
+    ResponseEntity<?> responseEntity = restTemplate.post(builderToString, request, Object.class).block();
     return responseEntity;
   }
 
   public ResponseEntity<?> deleteOneEmployee(long id) {
-    ResponseEntity<?> responseEntity = restTemplate.delete("http://localhost:8080/employees/" + id, Object.class).block();
+    ResponseEntity<?> responseEntity = restTemplate.delete("http://localhost:8080/employees/" + id, Object.class)
+        .block();
     return responseEntity;
   }
 
   public ResponseEntity<?> updateOneEmployee(Long id, Long dptId, Employee employeeDto) {
-      HttpEntity<Employee> request = new HttpEntity<>(employeeDto);
-      ResponseEntity<?> responseEntity = restTemplate
-          .put("http://localhost:8080/employees/" + id + "/" + dptId, request, Employee.class)
-          .block();
-      return responseEntity;
+    HttpEntity<Employee> request = new HttpEntity<>(employeeDto);
+    ResponseEntity<?> responseEntity = restTemplate
+        .put("http://localhost:8080/employees/" + id + "/" + dptId, request, Employee.class)
+        .block();
+    return responseEntity;
   }
-  
+
 }

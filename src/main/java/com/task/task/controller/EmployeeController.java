@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.slf4j.Logger;
 
@@ -64,8 +65,8 @@ public class EmployeeController {
 
     @PostMapping()
     @Operation(tags = { "Employee Api contoller" })
-    public ResponseEntity<?> createNewEmployee(@RequestBody @Valid Employee employee) {
-        ResponseEntity<?> response = employeeServices.createNewEmployee(employee);
+    public ResponseEntity<?> createNewEmployee(@RequestBody @Valid Employee employee, @RequestParam(value = "deptId", required = true) long deptId) {
+        ResponseEntity<?> response = employeeServices.createNewEmployee(employee, deptId);
         return response;
     }
 

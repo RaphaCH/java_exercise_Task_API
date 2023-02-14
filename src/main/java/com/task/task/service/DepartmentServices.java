@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import com.task.task.model.CustomException;
 import com.task.task.model.Department;
 import com.task.task.restTemplate.RestTemplate;
 
@@ -28,6 +30,11 @@ public class DepartmentServices {
             ResponseEntity<?> response = restTemplate.post("http://localhost:8080/departments", request, Department.class)
                     .block();
             return response;
+    }
+
+    public ResponseEntity<?> deleteOneDepartment(long id) {
+        ResponseEntity<?> response = restTemplate.delete("http://localhost:8080/departments/" + id, Object.class).block();
+        return response;
     }
 
 }
