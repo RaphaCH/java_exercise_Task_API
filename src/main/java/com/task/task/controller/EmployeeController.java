@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.slf4j.Logger;
 
 import com.task.task.model.Employee;
 import com.task.task.service.EmployeeServices;
@@ -30,8 +29,6 @@ public class EmployeeController {
 
     @Autowired
     private EmployeeServices employeeServices;
-
-    private static final Logger log = org.slf4j.LoggerFactory.getLogger(EmployeeServices.class);
 
     @GetMapping()
     // The operation annotation is method specific.

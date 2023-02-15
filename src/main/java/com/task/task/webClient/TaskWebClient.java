@@ -1,4 +1,4 @@
-package com.task.task.restTemplate;
+package com.task.task.webClient;
 
 import java.util.List;
 
@@ -13,11 +13,11 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 
 @Component
-public class RestTemplate {
+public class TaskWebClient {
 
     private final WebClient webClient;
 
-    public RestTemplate() {
+    public TaskWebClient() {
         this.webClient = WebClient.builder()
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .build();
@@ -40,6 +40,7 @@ public class RestTemplate {
                 .uri(url)
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
+                .onStatus(status -> status.is4xxClientError() || status.is5xxServerError(), clientResponse -> Mono.empty())
                 .toEntityList(responseType);
                 // .bodyToMono(new ParameterizedTypeReference<List<T>>() {
                 // });
@@ -51,6 +52,7 @@ public class RestTemplate {
                 .uri(url)
                 .bodyValue(request.getBody())
                 .retrieve()
+                .onStatus(status -> status.is4xxClientError() || status.is5xxServerError(), clientResponse -> Mono.empty())
                 .toEntity(responseType);
                 // .bodyToMono(responseType);
     }
@@ -61,6 +63,7 @@ public class RestTemplate {
                 .uri(url)
                 .bodyValue(request.getBody())
                 .retrieve()
+                .onStatus(status -> status.is4xxClientError() || status.is5xxServerError(), clientResponse -> Mono.empty())
                 .toEntity(responseType);
                 // .bodyToMono(responseType);
     }

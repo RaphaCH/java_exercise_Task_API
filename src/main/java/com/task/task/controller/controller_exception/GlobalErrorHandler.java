@@ -17,7 +17,7 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 import org.springframework.validation.FieldError;
 
 @ControllerAdvice
-public class EmployeeControllerAdvice {
+public class GlobalErrorHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<?> handleValidationExceptions(MethodArgumentNotValidException exception) {
@@ -32,16 +32,6 @@ public class EmployeeControllerAdvice {
         return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
     }
 
-    // ---------------------------------------------------------
-    // Currently not used
-    // ---------------------------------------------------------
-    //
-    // @ExceptionHandler(CustomException.class)
-    // public ResponseEntity<ErrorMessage> handleCustomException(CustomException exception) {
-    //     ErrorMessage errorMessage = ErrorMessageMapper.toErrorMessage(exception);
-    //     HttpStatus httpStatus = HttpStatus.valueOf(Integer.parseInt(errorMessage.getStatusCode()));
-    //     return new ResponseEntity<ErrorMessage>(errorMessage, httpStatus);
-    // }
 
     // ---------------------------------------------------------
     // We no longer need to handle WebClientResponseException because it is handled in 
@@ -50,20 +40,20 @@ public class EmployeeControllerAdvice {
     // and return empty mono, which means we get the treated ErrorMessage from Entity API
     // ---------------------------------------------------------
     // 
-    @ExceptionHandler(WebClientResponseException.class)
-    public ResponseEntity<?> handleWebClientResponseException(WebClientResponseException exception) {
-        ErrorMessage errorMessage = exception.getResponseBodyAs(ErrorMessage.class);
-        if (errorMessage != null) {
-            HttpStatusCode httpStatus = exception.getStatusCode();
-            return new ResponseEntity<>(errorMessage, httpStatus);
-            // return errorMessage;
-        } else {
-            ErrorMessage fallBackErrorMessage = new ErrorMessage("500",
-                    "Original errorMessage returned null, further action required", "500",
-                    "Original errorMessage returned null, further action required");
-            return new ResponseEntity<ErrorMessage>(fallBackErrorMessage, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
+    // @ExceptionHandler(WebClientResponseException.class)
+    // public ResponseEntity<?> handleWebClientResponseException(WebClientResponseException exception) {
+    //     ErrorMessage errorMessage = exception.getResponseBodyAs(ErrorMessage.class);
+    //     if (errorMessage != null) {
+    //         HttpStatusCode httpStatus = exception.getStatusCode();
+    //         return new ResponseEntity<>(errorMessage, httpStatus);
+    //         // return errorMessage;
+    //     } else {
+    //         ErrorMessage fallBackErrorMessage = new ErrorMessage("500",
+    //                 "Original errorMessage returned null, further action required", "500",
+    //                 "Original errorMessage returned null, further action required");
+    //         return new ResponseEntity<ErrorMessage>(fallBackErrorMessage, HttpStatus.INTERNAL_SERVER_ERROR);
+    //     }
+    // }
 
     @ExceptionHandler(WebClientRequestException.class)
     public ResponseEntity<ErrorMessage> handleWebClientRequestException(WebClientRequestException exception) {
