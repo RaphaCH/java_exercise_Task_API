@@ -11,7 +11,4 @@ public class TaskApplication {
 		SpringApplication.run(TaskApplication.class, args);
 	}
 
-	//Check TODOs on Entity API
-	//Services|Controller finish implementation of changes commented by Jaber
-	
 }
